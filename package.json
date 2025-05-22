@@ -1,0 +1,14 @@
+{
+  "name": "com.zagoradev.unity.commons",
+  "displayName": "Unity Commons (zagora.dev)",
+  "version": "1.0.0",
+  "unity": "6000.0",
+  "description": "Various scripts to help with Unity development.",
+  "keywords": [
+    "unity",
+    "common",
+    "commons",
+    "ui",
+    "zagora.dev"
+  ]
+}

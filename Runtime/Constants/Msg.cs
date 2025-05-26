@@ -41,7 +41,7 @@ namespace Commons.Constants
         #region GameObject Names
         
         public const string UI_LAYER = "[ Layer ] {0}";
-        public const string UI_VIEW = "[ View ] {0}";
+        public const string UI_WINDOW = "[ Window ] {0}";
         public const string NETWORKED_OBJECT = "[ NET ] {0}";
 
         #endregion

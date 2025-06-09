@@ -11,7 +11,8 @@ namespace Commons.Mono
     public abstract class ValidatedMonoBehaviour : MonoBehaviour
     {
 #if UNITY_EDITOR
-        private const BindingFlags Flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+        private const BindingFlags FLAGS 
+            = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
         
         private void Start()
         {
@@ -23,7 +24,7 @@ namespace Commons.Mono
             missingReferenceExceptions = null;
             
             var type = GetType();
-            var fieldInfos = type.GetFields(Flags).ToList();
+            var fieldInfos = type.GetFields(FLAGS).ToList();
             if (!fieldInfos.Any()) 
                 return true;
             

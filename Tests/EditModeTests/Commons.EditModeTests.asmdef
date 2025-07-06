@@ -4,7 +4,8 @@
     "references": [
         "Unity.Commons",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "Commons"
     ],
     "includePlatforms": [
         "Editor"

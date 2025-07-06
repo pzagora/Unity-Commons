@@ -1,31 +1,37 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 // ReSharper disable Unity.PerformanceCriticalCodeInvocation
 
 namespace Commons
 {
-    public class DelegateCommand<TData> : ICommand<TData>
+    public class DelegateCommand
+    {
+        protected static readonly ICommandExecutionContext DefaultContext
+            = new BaseExecutionContext();
+    }
+    
+    public class DelegateCommand<TData> : DelegateCommand, ICommand<TData>
     {
         private readonly Action<TData> _callback;
         private readonly ICommandExecutionContext _context;
             
-        public DelegateCommand(ICommandExecutionContext context, Action<TData> callback)
+        public DelegateCommand(Action<TData> callback, ICommandExecutionContext context = null)
         {
-            // HACK: if context == null or CanExecuteCommand throws an exception then the below code will crash (expected)
-            var canExecute = context.CanExecuteCommand;
-            this._context = context;
-            this._callback = callback;
+            _context = context ?? DefaultContext;
+            _callback = callback;
         }
 
         public async UniTask Fire(TData data)
         {
-            if (!_context.CanExecuteCommand)
+            if (!CanFire)
             {
                 return;
             }
             
             _callback?.Invoke(data);
+            await Task.CompletedTask;
         }
 
         public UniTask Fire(object data)
@@ -45,27 +51,23 @@ namespace Commons
         public bool IsBlocking => false;
     }
 
-    public class AsyncDelegateCommand<TData> : ICommand<TData>
+    public class AsyncDelegateCommand<TData> : DelegateCommand, ICommand<TData>
     {
         private readonly Func<TData, UniTask> _callback;
         private readonly ICommandExecutionContext _context;
         private UniTask _currentTask;
 
-        public AsyncDelegateCommand(ICommandExecutionContext context, Func<TData, UniTask> callback, bool isBlocking = true)
+        public AsyncDelegateCommand(Func<TData, UniTask> callback, bool isBlocking = true, ICommandExecutionContext context = null)
         {
-            // HACK: if context == null or CanExecuteCommand throws an exception then the below code will crash (expected)
-            var canExecute = context.CanExecuteCommand;
-            this._context = context;
-            this._callback = callback;
+            _context = context ?? DefaultContext;
+            _callback = callback;
             IsBlocking = isBlocking;
         }
 
         public async UniTask Fire(TData data)
         {
             if (!CanFire)
-            {
                 return;
-            }
             
             _context.BeginCommandExecution(this);
             _currentTask = _callback.Invoke(data);

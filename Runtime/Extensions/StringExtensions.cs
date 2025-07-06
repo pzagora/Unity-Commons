@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Commons.Constants;
 
@@ -43,6 +44,13 @@ namespace Commons.Extensions
                    (input.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                     input.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
                    );
+        }
+        
+        public static string CombinePath(this string input, string relativePath)
+        {
+            return input.IsHttpUrl()
+                ? input.TrimEnd('/', '\\') + "/" + relativePath.TrimStart('/', '\\')
+                : Path.Combine(input, relativePath);
         }
     }
 }

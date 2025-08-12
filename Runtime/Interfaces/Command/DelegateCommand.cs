@@ -1,37 +1,54 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 // ReSharper disable Unity.PerformanceCriticalCodeInvocation
 
 namespace Commons
 {
-    public class DelegateCommand
+    public class DelegateCommand : ICommand
     {
-        protected static readonly ICommandExecutionContext DefaultContext
-            = new BaseExecutionContext();
+        private readonly Action _callback;
+        private readonly ICommandExecutionContext _context;
+
+        public DelegateCommand(Action callback, ICommandExecutionContext context)
+        {
+            _callback = callback ?? throw new ArgumentNullException(nameof(callback));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public UniTask Fire(object _) 
+            => Fire();
+
+        public UniTask Fire()
+        {
+            if (!CanFire) return UniTask.CompletedTask;
+
+            _callback.Invoke();
+            return UniTask.CompletedTask;
+        }
+
+        public bool CanFire => _context.CanExecuteCommand;
+        public bool IsBlocking => false;
     }
     
-    public class DelegateCommand<TData> : DelegateCommand, ICommand<TData>
+    public class DelegateCommand<TData> : ICommand<TData>
     {
         private readonly Action<TData> _callback;
         private readonly ICommandExecutionContext _context;
-            
-        public DelegateCommand(Action<TData> callback, ICommandExecutionContext context = null)
+
+        public DelegateCommand(Action<TData> callback, ICommandExecutionContext context)
         {
-            _context = context ?? DefaultContext;
-            _callback = callback;
+            _callback = callback ?? throw new ArgumentNullException(nameof(callback));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async UniTask Fire(TData data)
+        public UniTask Fire(TData data)
         {
-            if (!CanFire)
-            {
-                return;
-            }
-            
-            _callback?.Invoke(data);
-            await Task.CompletedTask;
+            if (!CanFire) 
+                return UniTask.CompletedTask;
+
+            _callback.Invoke(data);
+            return UniTask.CompletedTask;
         }
 
         public UniTask Fire(object data)
@@ -49,47 +66,5 @@ namespace Commons
 
         public bool CanFire => _context.CanExecuteCommand;
         public bool IsBlocking => false;
-    }
-
-    public class AsyncDelegateCommand<TData> : DelegateCommand, ICommand<TData>
-    {
-        private readonly Func<TData, UniTask> _callback;
-        private readonly ICommandExecutionContext _context;
-        private UniTask _currentTask;
-
-        public AsyncDelegateCommand(Func<TData, UniTask> callback, bool isBlocking = true, ICommandExecutionContext context = null)
-        {
-            _context = context ?? DefaultContext;
-            _callback = callback;
-            IsBlocking = isBlocking;
-        }
-
-        public async UniTask Fire(TData data)
-        {
-            if (!CanFire)
-                return;
-            
-            _context.BeginCommandExecution(this);
-            _currentTask = _callback.Invoke(data);
-            await _currentTask;
-            _currentTask = default;
-            _context.EndCommandExecution(this);
-        }
-
-        public UniTask Fire(object data)
-        {
-            try
-            {
-                return Fire((TData)data);
-            }
-            catch (InvalidCastException)
-            {
-                Debug.LogError($"Command expected {typeof(TData)} but got {data?.GetType()} instead");
-                return UniTask.CompletedTask;
-            }
-        }
-
-        public bool CanFire => _context.CanExecuteCommand && _currentTask.Status != UniTaskStatus.Pending;
-        public bool IsBlocking { get; }
     }
 }

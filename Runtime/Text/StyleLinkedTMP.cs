@@ -1,3 +1,4 @@
+using Commons.Injection;
 using TMPro;
 using UnityEngine;
 
@@ -15,7 +16,19 @@ namespace Commons
         
         public FontSetting FontSetting 
             => fontSetting;
-        
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Binder.Bind(this);
+        }
+
+        protected override void OnDestroy()
+        {
+            Binder.Unbind(this);
+            base.OnDestroy();
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();

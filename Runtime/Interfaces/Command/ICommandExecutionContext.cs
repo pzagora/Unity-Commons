@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Commons
 {
-    public interface ICommandExecutionContext
+    public interface ICommandExecutionContext : IObservable
     {
         bool CanExecuteCommand { get; }
         void BeginCommandExecution(ICommand command);

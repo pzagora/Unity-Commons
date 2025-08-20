@@ -5,6 +5,7 @@ namespace Commons.Extensions
     public static class NumericExtensions
     {
         public const int Zero = 0;
+        public const int One = 1;
         
         /// <summary>
         /// Checks if value is 0 using default or double.Epsilon comparison.

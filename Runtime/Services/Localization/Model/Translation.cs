@@ -9,9 +9,6 @@ namespace Commons.Services
     [XmlCollectionRoot("translations")]
     public class Translation : Indexed
     {
-        [XmlAttribute("key")]
-        public string key;
-
         [XmlElement("value")]
         public TranslationValue[] values;
     }

@@ -50,7 +50,7 @@ namespace Commons.Services
                     }
                 }
                 
-                _translations[translation.key] = map;
+                _translations[translation.Id] = map;
                 
                 await Task.Yield();
             }

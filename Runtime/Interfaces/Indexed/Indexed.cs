@@ -8,10 +8,10 @@ namespace Commons
     public abstract class Indexed : IIndexed
     {
         [SerializeField]
-        private int id;
+        private string id;
 
         [XmlAttribute("id")]
-        public int Id
+        public string Id
         {
             get => id;
             set => id = value;

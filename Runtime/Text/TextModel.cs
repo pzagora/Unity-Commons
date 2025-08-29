@@ -26,17 +26,19 @@ namespace Commons
             get => _args; 
             set => UpdateValue(ref _args, GetNormalizedArgs(value));
         }
-        
+
         public TextModel Full(string key, params object[] args)
         {
-            using (Batch())
-            {
-                WithKey(key);
-                WithArgs(args);
-            }
+            Lock();
+            
+            WithKey(key);
+            WithArgs(args);
+            
+            Unlock();
+            
             return this;
         }
-        
+
         public TextModel WithKey(string key)
         {
             Key = key;

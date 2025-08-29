@@ -2,6 +2,6 @@ namespace Commons
 {
     public interface IIndexed
     {
-        string Id { get; }
+        string Id { get; set; }
     }
 }

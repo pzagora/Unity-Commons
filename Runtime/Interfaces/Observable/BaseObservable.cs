@@ -54,43 +54,22 @@ namespace Commons
 
         private int _lockCount;
         private bool _updateAfterUnlock;
-        
-        private int _batchDepth;
-        private bool _batchDirty;
-     
+
         /// <summary>
         /// Marks object as changed. If the object is not locked, <c>update</c> event is fired immediately. Otherwise,
         /// the <c>update</c> event will be fired when object is unlocked
         /// </summary>
         protected void SignalUpdate()
         {
-            if (_batchDepth > 0)
-            {
-                _batchDirty = true;
-                return;
-            }
-
             if (_lockCount == 0)
             {
+                _updateAfterUnlock = false;
                 Update?.Invoke();
             }
             else
             {
                 _updateAfterUnlock = true;
             }
-        }
-
-        protected IDisposable Batch()
-        {
-            _batchDepth++;
-            return new BatchToken(() =>
-            {
-                if (--_batchDepth == 0 && _batchDirty)
-                {
-                    _batchDirty = false;
-                    SignalUpdate();
-                }
-            });
         }
 
         /// <summary>
@@ -138,22 +117,6 @@ namespace Commons
             
             value = newValue;
             SignalUpdate();
-        }
-
-        private sealed class BatchToken : IDisposable
-        {
-            private Action _end;
-
-            public BatchToken(Action end)
-            {
-                _end = end;
-            }
-
-            public void Dispose()
-            {
-                _end?.Invoke();
-                _end = null;
-            }
         }
     }
 }

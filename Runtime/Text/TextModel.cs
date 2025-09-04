@@ -27,7 +27,7 @@ namespace Commons
             set => UpdateValue(ref _args, GetNormalizedArgs(value));
         }
 
-        public TextModel Full(string key, params object[] args)
+        public TextModel With(string key, params object[] args)
         {
             Lock();
             

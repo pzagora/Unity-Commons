@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Commons.Extensions
 {
@@ -30,5 +31,23 @@ namespace Commons.Extensions
         /// <typeparam name="T">Suitable value type.</typeparam>
         /// <returns>True if value is NOT zero, False otherwise.</returns>
         public static bool NotZero<T>(this T value) where T : struct, IEquatable<T> => !IsZero(value);
+        
+        /// <summary>
+        /// Clamp value to be not less than zero.
+        /// </summary>
+        public static int ClampToPositive(this int value)
+            => value < Zero ? Zero : value;
+
+        /// <summary>
+        /// Clamp value to be not less than zero.
+        /// </summary>
+        public static float ClampToPositive(this float value)
+            => value < Zero ? Zero : value;
+        
+        /// <summary>
+        /// Floors the provided float value to zero.
+        /// </summary>
+        public static int FloorToInt(this float value)
+            => Mathf.FloorToInt(value);
     }
 }

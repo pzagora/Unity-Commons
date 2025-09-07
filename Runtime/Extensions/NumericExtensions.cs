@@ -49,5 +49,11 @@ namespace Commons.Extensions
         /// </summary>
         public static int FloorToInt(this float value)
             => Mathf.FloorToInt(value);
+
+        public static float ToAdditionalPercentageMultiplier(this int value)
+            => 1 + value.ToPercentageMultiplier();
+        
+        public static float ToPercentageMultiplier(this int value)
+            => value / 100f;
     }
 }

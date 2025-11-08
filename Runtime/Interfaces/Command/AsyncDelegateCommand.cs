@@ -21,16 +21,23 @@ namespace Commons
         
         public UniTask Fire(object _) 
             => Fire();
-        
-        public async UniTask Fire()
-        {
-            if (!CanFire) return;
 
-            _context.BeginCommandExecution(this);
-            _currentTask = _callback.Invoke();
-            await _currentTask;
-            _currentTask = default;
-            _context.EndCommandExecution(this);
+        private async UniTask Fire()
+        {
+            if (!CanFire) 
+                return;
+            
+            try
+            {
+                _context.BeginCommandExecution(this);
+                _currentTask = _callback.Invoke();
+                await _currentTask;
+            }
+            finally
+            {
+                _currentTask = default;
+                _context.EndCommandExecution(this);
+            }
 
             await Task.Yield();
         }
@@ -54,13 +61,20 @@ namespace Commons
 
         public async UniTask Fire(TData data)
         {
-            if (!CanFire) return;
+            if (!CanFire) 
+                return;
 
-            _context.BeginCommandExecution(this);
-            _currentTask = _callback.Invoke(data);
-            await _currentTask;
-            _currentTask = default;
-            _context.EndCommandExecution(this);
+            try
+            {
+                _context.BeginCommandExecution(this);
+                _currentTask = _callback.Invoke(data);
+                await _currentTask;
+            }
+            finally
+            {
+                _currentTask = default;
+                _context.EndCommandExecution(this);
+            }
         }
 
         public UniTask Fire(object data)

@@ -6,13 +6,13 @@ namespace Commons
 {
     public interface ICommand
     {
-        UniTask Fire(object data);
-        bool CanFire { get; }
+        UniTask Execute(object payload = null);
+        bool CanExecute { get; }
         bool IsBlocking { get; }
     }
 
     public interface ICommand<in TData> : ICommand
     {
-        UniTask Fire(TData data);
+        UniTask Execute(TData payload);
     }
 }

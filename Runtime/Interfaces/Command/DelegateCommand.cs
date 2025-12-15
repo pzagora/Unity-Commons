@@ -16,18 +16,18 @@ namespace Commons
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public UniTask Fire(object _) 
-            => Fire();
+        public UniTask Execute(object _) 
+            => TryExecute();
 
-        public UniTask Fire()
+        public UniTask TryExecute()
         {
-            if (!CanFire) return UniTask.CompletedTask;
+            if (!CanExecute) return UniTask.CompletedTask;
 
             _callback.Invoke();
             return UniTask.CompletedTask;
         }
 
-        public bool CanFire => _context.CanExecuteCommand;
+        public bool CanExecute => _context.CanExecuteCommand;
         public bool IsBlocking => false;
     }
     
@@ -42,29 +42,29 @@ namespace Commons
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public UniTask Fire(TData data)
+        public UniTask Execute(TData payload)
         {
-            if (!CanFire) 
+            if (!CanExecute) 
                 return UniTask.CompletedTask;
 
-            _callback.Invoke(data);
+            _callback.Invoke(payload);
             return UniTask.CompletedTask;
         }
 
-        public UniTask Fire(object data)
+        public UniTask Execute(object payload)
         {
             try
             {
-                return Fire((TData)data);
+                return Execute((TData)payload);
             }
             catch (InvalidCastException)
             {
-                Debug.LogError($"Command expected {typeof(TData)} but got {data?.GetType()} instead");
+                Debug.LogError($"Command expected {typeof(TData)} but got {payload?.GetType()} instead");
                 return UniTask.CompletedTask;
             }
         }
 
-        public bool CanFire => _context.CanExecuteCommand;
+        public bool CanExecute => _context.CanExecuteCommand;
         public bool IsBlocking => false;
     }
 }

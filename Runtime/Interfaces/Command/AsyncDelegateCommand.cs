@@ -19,12 +19,12 @@ namespace Commons
             IsBlocking = isBlocking;
         }
         
-        public UniTask Fire(object _) 
-            => Fire();
+        public UniTask Execute(object _ = null) 
+            => TryExecute();
 
-        private async UniTask Fire()
+        private async UniTask TryExecute()
         {
-            if (!CanFire) 
+            if (!CanExecute) 
                 return;
             
             try
@@ -42,7 +42,7 @@ namespace Commons
             await Task.Yield();
         }
 
-        public bool CanFire => _context.CanExecuteCommand && _currentTask.Status != UniTaskStatus.Pending;
+        public bool CanExecute => _context.CanExecuteCommand && _currentTask.Status != UniTaskStatus.Pending;
         public bool IsBlocking { get; }
     }
 
@@ -59,15 +59,15 @@ namespace Commons
             IsBlocking = isBlocking;
         }
 
-        public async UniTask Fire(TData data)
+        public async UniTask Execute(TData payload)
         {
-            if (!CanFire) 
+            if (!CanExecute) 
                 return;
 
             try
             {
                 _context.BeginCommandExecution(this);
-                _currentTask = _callback.Invoke(data);
+                _currentTask = _callback.Invoke(payload);
                 await _currentTask;
             }
             finally
@@ -77,20 +77,20 @@ namespace Commons
             }
         }
 
-        public UniTask Fire(object data)
+        public UniTask Execute(object payload)
         {
             try
             {
-                return Fire((TData)data);
+                return Execute((TData)payload);
             }
             catch (InvalidCastException)
             {
-                Debug.LogError($"Command expected {typeof(TData)} but got {data?.GetType()} instead");
+                Debug.LogError($"Command expected {typeof(TData)} but got {payload?.GetType()} instead");
                 return UniTask.CompletedTask;
             }
         }
 
-        public bool CanFire => _context.CanExecuteCommand && _currentTask.Status != UniTaskStatus.Pending;
+        public bool CanExecute => _context.CanExecuteCommand && _currentTask.Status != UniTaskStatus.Pending;
         public bool IsBlocking { get; }
     }
 }

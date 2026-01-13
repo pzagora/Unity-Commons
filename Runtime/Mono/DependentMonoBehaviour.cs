@@ -4,7 +4,7 @@ namespace Commons.Mono
 {
     public abstract class DependentMonoBehaviour : ValidatedMonoBehaviour
     {
-        private void Awake()
+        protected virtual void Awake()
             => Binder.Bind(this);
 
         private void OnDestroy()

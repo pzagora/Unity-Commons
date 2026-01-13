@@ -12,9 +12,9 @@ namespace Commons
     [DisallowMultipleComponent]
     public class StyleLinkedTMP : TextMeshProUGUI
     {
-        [SerializeField] private FontSetting fontSetting;
+        [SerializeField] private FontPreset fontSetting;
         
-        public FontSetting FontSetting 
+        public FontPreset FontSetting 
             => fontSetting;
 
         protected override void Awake()

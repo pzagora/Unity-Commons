@@ -1,6 +1,6 @@
 namespace Commons.PlayerPrefs
 {
-    public abstract class LocalizationPlayerPrefs : TargetedPlayerPrefs
+    public abstract class LocalizationPlayerPrefs : ATargetedPlayerPrefs
     {
         private const string KEY_LANGUAGE = "localization_language";
         

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Commons.PlayerPrefs
 {
-    public abstract class TargetedPlayerPrefs
+    public abstract class ATargetedPlayerPrefs
     {
         protected static void SetString(string key, string value)
             => UnityEngine.PlayerPrefs.SetString(key, value);

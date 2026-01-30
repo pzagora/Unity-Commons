@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Commons.Services
 {
-    public interface ILocalizationService<TLanguage>
+    public interface ILocalizationService<TLanguage> : IService
         where TLanguage : Enum
     {
         /// <summary>

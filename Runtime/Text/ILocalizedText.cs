@@ -1,6 +1,6 @@
 namespace Commons
 {
-    public interface ILocalizedText : ISetupable<TextModel>
+    public interface ILocalizedText
     {
         TextModel Model { get; }
         void UpdateText();

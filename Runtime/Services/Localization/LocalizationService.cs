@@ -17,6 +17,11 @@ namespace Commons.Services
 
         private const int TEXT_UPDATE_BATCH_SIZE = 20;
         
+        private const string LOG_UNKNOWN_LANGUAGE = "Unknown language code: {0}";
+        private const string LOG_REGISTERED_TRANSLATIONS = "Registered {0} translations";
+        private const string LOG_LANGUAGE_CHANGED = "Language changed: {0} -> {1}";
+        private const string LOG_MISSING_TRANSLATION = "Missing translation <{0}> in {1}";
+        
         public LocalizationService(ILanguageMapper<TLanguage> mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -46,7 +51,7 @@ namespace Commons.Services
                     }
                     else
                     {
-                        this.ReportWarning($"[{nameof(LocalizationService<TLanguage>)}] Unknown language code: {val.lang}");
+                        Report.Warning<LocalizationService<TLanguage>>(string.Format(LOG_UNKNOWN_LANGUAGE, val.lang));
                     }
                 }
                 
@@ -55,7 +60,7 @@ namespace Commons.Services
                 await Task.Yield();
             }
             
-            this.ReportEvent($"Registered {_translations.Keys.Count} translations");
+            Report.Event<LocalizationService<TLanguage>>(string.Format(LOG_REGISTERED_TRANSLATIONS, _translations.Keys.Count));
             await BatchUpdate();
         }
 
@@ -64,7 +69,7 @@ namespace Commons.Services
             if (Equals(CurrentLanguage, language))
                 return;
 
-            this.ReportEvent($"Language changed: {CurrentLanguage} -> {language}");
+            Report.Event<LocalizationService<TLanguage>>(string.Format(LOG_LANGUAGE_CHANGED, CurrentLanguage, language));
             CurrentLanguage = language;
 
             _languagePersistence.Save(CurrentLanguage);
@@ -84,14 +89,14 @@ namespace Commons.Services
                 return string.Empty;
             
             key = key.ToLowerInvariant();
-            
-            if (_translations.TryGetValue(key, out var langMap) && 
-                langMap.TryGetValue(language, out var text))
+
+            var hasMap = _translations.TryGetValue(key, out var langMap);
+            if (hasMap && langMap.TryGetValue(language, out var text))
             {
                 return text;
             }
-
-            this.ReportWarning($"Missing translation ({key}) in {language}");
+            
+            Report.Warning<LocalizationService<TLanguage>>(string.Format(LOG_MISSING_TRANSLATION, key, language));
             return key;
         }
 

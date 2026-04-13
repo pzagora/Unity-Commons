@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 // ReSharper disable UnusedMember.Global
 
-namespace Commons.Collections
+namespace Commons
 {
     [Serializable]
     public class SerializableDictionary {}

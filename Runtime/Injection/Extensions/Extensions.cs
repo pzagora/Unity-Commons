@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace Commons.Injection
+namespace Commons
 {
     internal static class Extensions
     {

@@ -1,4 +1,4 @@
-namespace Commons.Enums
+namespace Commons
 {
     public enum Vector2Component
     {

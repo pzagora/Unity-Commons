@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Commons.Attributes;
-using Commons.Constants;
 
-namespace Commons.Mono
+namespace Commons
 {
     public abstract class ValidatedMonoBehaviour : MonoBehaviour
     {

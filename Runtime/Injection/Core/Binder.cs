@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
-#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Callbacks;
-#endif
 
-namespace Commons.Injection
+namespace Commons
 {
     /// <summary>
     /// Handles class fields marked by <see cref="Inject"/> or <see cref="Update"/> and classes by <see cref="Install"/> dependency binding

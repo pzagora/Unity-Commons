@@ -1,4 +1,3 @@
-using Commons.Attributes;
 using TMPro;
 using UnityEngine;
 

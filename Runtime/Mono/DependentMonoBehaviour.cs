@@ -1,6 +1,4 @@
-using Commons.Injection;
-
-namespace Commons.Mono
+namespace Commons
 {
     public abstract class DependentMonoBehaviour : ValidatedMonoBehaviour
     {

@@ -3,7 +3,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Commons.Editor.Texts
+namespace Commons.Editor
 {
     [CustomEditor(typeof(StyleLinkedTMP))]
     [CanEditMultipleObjects]

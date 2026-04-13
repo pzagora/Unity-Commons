@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Commons.Extensions
+namespace Commons
 {
     public static class GameObjectExtensions
     {

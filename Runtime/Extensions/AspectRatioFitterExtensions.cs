@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Commons.Extensions
+namespace Commons
 {
     public static class AspectRatioFitterExtensions
     {

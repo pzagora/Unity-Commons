@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
-using Commons.Enums;
 
-namespace Commons.Extensions
+namespace Commons
 {
     public static class VectorExtensions
     {

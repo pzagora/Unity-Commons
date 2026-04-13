@@ -1,7 +1,6 @@
 ﻿using System;
-using Commons.Injection;
 
-namespace Commons.Injection
+namespace Commons
 {
     /// <summary>
     /// Marks a field to have a dependency kept updated into, by <see cref="Binder"/>

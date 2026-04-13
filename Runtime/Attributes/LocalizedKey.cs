@@ -1,6 +1,6 @@
 using System;
 
-namespace Commons.Attributes
+namespace Commons
 {
     /// <summary>
     /// Attribute to annotate enum values with a localization key.

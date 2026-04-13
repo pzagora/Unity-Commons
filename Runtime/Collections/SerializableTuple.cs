@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Commons.Collections
+namespace Commons
 {
     /// <summary>
     /// A (key, value) tuple that can be used with Unity's serialization system. 

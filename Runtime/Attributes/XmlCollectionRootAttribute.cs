@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace Commons.Attributes
+namespace Commons
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class XmlCollectionRootAttribute : XmlRootAttribute

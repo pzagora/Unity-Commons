@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Commons.Services
+namespace Commons.Coroutine
 {
     /// <summary>
     /// This service allows usage of coroutines outside MonoBehaviours

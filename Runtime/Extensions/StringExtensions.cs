@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Commons.Constants;
 
-namespace Commons.Extensions
+namespace Commons
 {
     public static class StringExtensions
     {

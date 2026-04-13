@@ -1,4 +1,4 @@
-namespace Commons.Constants
+namespace Commons
 {
     public readonly struct Msg
     {

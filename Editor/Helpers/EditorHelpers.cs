@@ -3,10 +3,9 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using Commons.Extensions;
 using Object = UnityEngine.Object;
 
-namespace Commons.Editor.Helpers
+namespace Commons.Editor
 {
     public static class EditorHelper
     {

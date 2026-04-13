@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Commons.Extensions;
 
 namespace Commons.Tests.EditModeTests.Extensions
 {

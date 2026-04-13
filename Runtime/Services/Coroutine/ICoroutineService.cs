@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace Commons.Services
+namespace Commons.Coroutine
 {
     public interface ICoroutineService : IService
     {

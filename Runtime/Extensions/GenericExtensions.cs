@@ -1,4 +1,4 @@
-namespace Commons.Extensions
+namespace Commons
 {
     public static class GenericExtensions
     {

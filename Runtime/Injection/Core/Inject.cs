@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Commons.Injection
+namespace Commons
 {
     /// <summary>
     /// Marks a field to have a dependency injected into once, by <see cref="Binder"/>

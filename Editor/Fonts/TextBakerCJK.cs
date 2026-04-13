@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.TextCore.LowLevel;
 
-namespace Commons.Editor.Fonts
+namespace Commons.Editor
 {
     // ReSharper disable once InconsistentNaming
     public class TextBakerCJK : EditorWindow

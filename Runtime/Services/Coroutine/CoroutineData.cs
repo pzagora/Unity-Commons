@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Commons.Services
+namespace Commons.Coroutine
 {
     public class CoroutineData
     {

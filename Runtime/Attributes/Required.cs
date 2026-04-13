@@ -1,6 +1,6 @@
 using System;
 
-namespace Commons.Attributes
+namespace Commons
 {
     /// <summary>
     /// Flag that automatically makes sure selected variables are assigned and/or initialized.<para />

@@ -40,7 +40,7 @@ namespace Commons.Coroutine
         /// </summary>
         /// <param name="guid"><see cref="Guid">GUID</see> of requested <see cref="Coroutine"/>.</param>
         /// <returns><see cref="Coroutine"/> with given <see cref="Guid">GUID</see>.</returns>
-        public Coroutine GetCoroutine(Guid guid)
+        public UnityEngine.Coroutine GetCoroutine(Guid guid)
         {
             return _coroutines.TryGetValue(guid, out var coroutine) 
                 ? coroutine.Coroutine 

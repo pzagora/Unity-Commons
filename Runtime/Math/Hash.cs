@@ -1,4 +1,6 @@
-namespace Common
+using System.Linq;
+
+namespace Commons
 {
     public static class Hash
     {
@@ -6,12 +8,7 @@ namespace Common
         {
             unchecked
             {
-                var result = 0;
-                for (int i = 0; i < objects.Length; ++i)
-                {
-                    result = (result * 397) ^ objects[i].GetHashCode();
-                }
-                return result;
+                return objects.Aggregate(0, (current, t) => (current * 397) ^ t.GetHashCode());
             }
         }
     }

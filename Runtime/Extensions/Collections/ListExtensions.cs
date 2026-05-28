@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Common
+namespace Commons
 {
     public static class ListExtensions
     {
@@ -121,12 +121,12 @@ namespace Common
 
         public static bool TryGetFirst<T>(this List<T> self, out T item)
         {
-            return self.TryGetAt(0, out item);
+            return TryGetAt(self, 0, out item);
         }
 
         public static bool TryGetLast<T>(this List<T> self, out T item)
         {
-            return self.TryGetAt(self.Count - 1, out item);
+            return TryGetAt(self, self.Count - 1, out item);
         }
 
         public static bool TryIndexOf<T>(this List<T> self, T item, out int index)

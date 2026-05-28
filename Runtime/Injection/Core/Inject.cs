@@ -1,31 +1,26 @@
 ﻿using System;
+using UnityEngine.Scripting;
 
 namespace Commons
 {
     /// <summary>
-    /// Marks a field to have a dependency injected into once, by <see cref="Binder"/>
+    /// Marks a field or a method to have a dependency injected into, once, by <see cref="Binder"/>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class Inject : Attribute
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method)]
+    public class Inject : PreserveAttribute
     {
         /// <summary>
         /// Allows defining a type by which dependency should be injected. Defaults to field type
         /// </summary>
-        public readonly Type Type;
+        public readonly Type type;
 
-        /// <summary>
-        /// Allows defining a callback method to call upon dependency injection. Defaults to On{type}Inject
-        /// </summary>
-        public readonly string Callback;
-
-        public Inject(Type type, string callback = null)
+        public Inject()
         {
-            Type = type;
-            Callback = callback;
         }
 
-        public Inject(string callback) : this(null, callback) { }
-        
-        public Inject() : this(null, null) { }
+        public Inject(Type type)
+        {
+            this.type = type;
+        }
     }
 }

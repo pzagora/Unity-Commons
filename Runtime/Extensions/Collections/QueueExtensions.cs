@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Common
+namespace Commons
 {
     public static class QueueExtensions
     {

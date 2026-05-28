@@ -8,165 +8,186 @@ using UnityEditor.Callbacks;
 namespace Commons
 {
     /// <summary>
-    /// Handles class fields marked by <see cref="Inject"/> or <see cref="Update"/> and classes by <see cref="Install"/> dependency binding
+    /// Handles class fields marked by <see cref="Inject"/> or <see cref="Track"/> and classes by <see cref="Install"/> dependency binding
     /// </summary>
     public static class Binder
     {
+        private const BindingFlags BINDINGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
         private sealed class Listener
         {
-            public object Target;
-            public FieldInfo Field;
-            public MethodInfo Callback;
+            public object target;
+            public FieldInfo field;
+            public MethodInfo method;
 
             public void Call(object dependency)
             {
-                if (Callback != null && dependency != null)
+                if (method != null && dependency != null)
                 {
-#if ENABLE_DI_LOGS
-                    DebugLog("Invoking", target, callback, dependency);
-#endif
-                    Callback.Invoke(Target, new object[] { dependency });
+                    method.Invoke(target, new object[] { dependency });
                 }
 
-#if ENABLE_DI_LOGS
-                DebugLog("Injecting", target, field, dependency);
-#endif
-                Field.SetValue(Target, dependency);
+                if (field != null)
+                {
+                    field.SetValue(target, dependency);
+                }
             }
         }
 
         private class ListenerList : List<Listener>
         {
-            public void Call(object dependency)
+            public void Call(object dependency) 
                 => ForEach(listener => listener.Call(dependency));
 
-            public void Remove(object target)
-                => RemoveAll(listener => listener.Target == target);
+            public void Remove(object target) 
+                => RemoveAll(listener => listener.target == target);
         }
 
-        private class DependencyList : List<object> { }
+        private class DependencyList : List<object>
+        {
+        }
 
         private class InstallData
         {
-            public Type Type;
+            public Type type;
         }
 
         private class InjectData
         {
-            public Type Type;
-            public FieldInfo Field;
-            public MethodInfo Callback;
-            public bool Updater;
+            public Type type;
+            public FieldInfo field;
+            public MethodInfo method;
+            public bool tracking;
         }
 
         private class ReflectionData
         {
-            public List<InstallData> Installs;
-            public List<InjectData> Injects;
+            public List<InstallData> installs;
+            public List<InjectData> injects;
         }
 
         private static Dictionary<Type, DependencyList> _dependencyLists = new();
         private static Dictionary<Type, ListenerList> _injectorLists = new();
-        private static Dictionary<Type, ListenerList> _updaterLists = new();
+        private static Dictionary<Type, ListenerList> _trackingLists = new();
         private static Dictionary<Type, ReflectionData> _reflections = new();
 
+        /// <summary>
+        /// Binds <paramref name="target"/> by handling Injects and Installs, defined by assigned attributes.
+        /// </summary>
         public static void Bind(object target)
         {
             var type = target.GetType();
             var list = EnsureReflection(type);
 
-            if (list.Installs != null)
-                foreach (var install in list.Installs)
+            if (list.installs != null)
+            {
+                foreach (var install in list.installs)
+                {
                     Install(target, install);
-            
-            if (list.Injects != null)
-                foreach (var inject in list.Injects)
+                }
+            }
+
+            if (list.injects != null)
+            {
+                foreach (var inject in list.injects)
+                {
                     Inject(target, inject);
+                }
+            }
         }
 
+        /// <summary>
+        /// Unbinds <paramref name="target"/> by clearing Injects and Installs, defined by assigned attributes.
+        /// </summary>
         public static void Unbind(object target)
         {
             var type = target.GetType();
             var list = EnsureReflection(type);
 
-            if (list.Installs != null)
-                foreach (var install in list.Installs)
+            if (list.installs != null)
+            {
+                foreach (var install in list.installs)
+                {
                     Uninstall(target, install);
-            
-            if (list.Injects != null)
-                foreach (var inject in list.Injects)
+                }
+            }
+
+            if (list.injects != null)
+            {
+                foreach (var inject in list.injects)
+                {
                     Uninject(target, inject);
+                }
+            }
         }
 
+        /// <summary>
+        /// Manually Installs <paramref name="target"/> as Dependency of <paramref name="type"/> .
+        /// </summary>
         public static void Install(object target, Type type)
         {
-#if ENABLE_DI_LOGS
-            DebugLog("Installing", target);
-#endif
-
             AddDependency(type, target);
             RefreshDependency(type);
         }
 
-        public static void Install<T>(T target)
+        /// <summary>
+        /// Manually Installs <paramref name="target"/> as Dependency of Type <typeparamref name="T"/>.
+        /// </summary>
+        public static void Install<T>(T target) 
             => Install(target, typeof(T));
 
+        /// <summary>
+        /// Uninstalls manually assigned Dependency <paramref name="target"/> of <paramref name="type"/>.
+        /// </summary>
         public static void Uninstall(object target, Type type)
         {
-#if ENABLE_DI_LOGS
-            DebugLog("Uninstalling", target);
-#endif
-
             if (RemoveDependency(type, target))
             {
                 RefreshDependency(type);
             }
         }
 
-        public static void Uninstall<T>(T target)
+        /// <summary>
+        /// Uninstalls manually assigned <paramref name="target"/> Dependency of Type <typeparamref name="T"/>.
+        /// </summary>
+        public static void Uninstall<T>(T target) 
             => Uninstall(target, typeof(T));
 
-        private static void Install(object target, InstallData install)
-            => Install(target, install.Type);
+        private static void Install(object target, InstallData install) 
+            => Install(target, install.type);
 
-        private static void Uninstall(object target, InstallData install)
-            => Uninstall(target, install.Type);
+        private static void Uninstall(object target, InstallData install) 
+            => Uninstall(target, install.type);
 
         private static void Inject(object target, InjectData inject)
         {
             var listener = new Listener
             {
-                Target = target,
-                Field = inject.Field,
-                Callback = inject.Callback
+                target = target,
+                field = inject.field,
+                method = inject.method
             };
 
-            var injected = RefreshListener(inject.Type, listener);
+            var injected = RefreshListener(inject.type, listener);
 
-            if (inject.Updater)
-            {
-                AddUpdater(inject.Type, listener);
-            }
-            else if (!injected)
-            {
-                AddInjector(inject.Type, listener);
-            }
+            if (inject.tracking)
+                AddUpdater(inject.type, listener);
+            else if (!injected) 
+                AddInjector(inject.type, listener);
         }
 
         private static void Uninject(object target, InjectData inject)
         {
-#if ENABLE_DI_LOGS
-            DebugLog("Uninjecting", target, inject.field);
-#endif
+            RemoveInjector(inject.type, target);
+            RemoveTracker(inject.type, target);
 
-            RemoveUpdater(inject.Type, target);
-            inject.Field.SetValue(target, null);
+            if (inject.field != null)
+                inject.field.SetValue(target, null);
         }
 
         private static bool RefreshListener(Type type, Listener listener)
         {
-            if (TryGetDependencies(type, out var dependencies) &&
-                dependencies.TryGetLast(out var dependency))
+            if (TryGetDependencies(type, out var dependencies) && ListExtensions.TryGetLast(dependencies, out var dependency))
             {
                 listener.Call(dependency);
                 return true;
@@ -176,8 +197,7 @@ namespace Commons
 
         private static void RefreshDependency(Type type)
         {
-            if (!TryGetDependencies(type, out var dependencies) ||
-                !dependencies.TryGetLast(out var dependency))
+            if (!TryGetDependencies(type, out var dependencies) || !ListExtensions.TryGetLast(dependencies, out var dependency))
             {
                 dependency = null;
             }
@@ -197,10 +217,8 @@ namespace Commons
         }
 
         #region Dependencies
-        private static void AddDependency(Type type, object dependency)
-        {
-            EnsureDependencies(type).Add(dependency);
-        }
+        private static void AddDependency(Type type, object dependency) 
+            => EnsureDependencies(type).Add(dependency);
 
         private static bool RemoveDependency(Type type, object dependency)
         {
@@ -218,65 +236,57 @@ namespace Commons
             return false;
         }
 
-        private static bool TryGetDependencies(Type type, out DependencyList dependencies)
-        {
-            return _dependencyLists.TryGetValue(type, out dependencies);
-        }
+        private static bool TryGetDependencies(Type type, out DependencyList dependencies) 
+            => _dependencyLists.TryGetValue(type, out dependencies);
 
         private static DependencyList EnsureDependencies(Type type)
         {
             if (!_dependencyLists.TryGetValue(type, out var dependencies))
                 _dependencyLists[type] = dependencies = new DependencyList();
+            
             return dependencies;
         }
 
-        private static void RemoveDependencies(Type type)
-        {
-            _dependencyLists.Remove(type);
-        }
+        private static void RemoveDependencies(Type type) 
+            => _dependencyLists.Remove(type);
+
         #endregion
 
         #region Updaters
-        private static void AddUpdater(Type type, Listener updater)
-        {
-            EnsureUpdaters(type).Add(updater);
-        }
+        private static void AddUpdater(Type type, Listener updater) 
+            => EnsureUpdaters(type).Add(updater);
 
-        private static void RemoveUpdater(Type type, object updater)
+        private static void RemoveTracker(Type type, object updater)
         {
             if (TryGetUpdaters(type, out var updaters))
             {
                 updaters.Remove(updater);
                 if (updaters.Count == 0)
                 {
-                    RemoveUpdaters(type);
+                    RemoveTrackers(type);
                 }
             }
         }
 
-        private static bool TryGetUpdaters(Type type, out ListenerList updaters)
-        {
-            return _updaterLists.TryGetValue(type, out updaters);
-        }
+        private static bool TryGetUpdaters(Type type, out ListenerList updaters) 
+            => _trackingLists.TryGetValue(type, out updaters);
 
         private static ListenerList EnsureUpdaters(Type type)
         {
-            if (!_updaterLists.TryGetValue(type, out var updaters))
-                _updaterLists[type] = updaters = new ListenerList();
+            if (!_trackingLists.TryGetValue(type, out var updaters))
+                _trackingLists[type] = updaters = new ListenerList();
+            
             return updaters;
         }
 
-        private static void RemoveUpdaters(Type type)
-        {
-            _updaterLists.Remove(type);
-        }
+        private static void RemoveTrackers(Type type) 
+            => _trackingLists.Remove(type);
+
         #endregion
 
         #region Injectors
-        private static void AddInjector(Type type, Listener injector)
-        {
-            EnsureInjectors(type).Add(injector);
-        }
+        private static void AddInjector(Type type, Listener injector) 
+            => EnsureInjectors(type).Add(injector);
 
         private static void RemoveInjector(Type type, object injector)
         {
@@ -290,105 +300,118 @@ namespace Commons
             }
         }
 
-        private static bool TryGetInjectors(Type type, out ListenerList injectors)
-        {
-            return _injectorLists.TryGetValue(type, out injectors);
-        }
+        private static bool TryGetInjectors(Type type, out ListenerList injectors) 
+            => _injectorLists.TryGetValue(type, out injectors);
 
         private static ListenerList EnsureInjectors(Type type)
         {
             if (!_injectorLists.TryGetValue(type, out var injectors))
                 _injectorLists[type] = injectors = new ListenerList();
+            
             return injectors;
         }
 
-        private static void RemoveInjectors(Type type)
-        {
-            _injectorLists.Remove(type);
-        }
+        private static void RemoveInjectors(Type type) 
+            => _injectorLists.Remove(type);
+
         #endregion
 
         private static ReflectionData EnsureReflection(Type type)
         {
             if (!_reflections.TryGetValue(type, out var result))
                 _reflections[type] = result = CreateReflection(type);
+            
             return result;
         }
 
         private static ReflectionData CreateReflection(Type type)
         {
-            var injects = CreateInjectData(type);
-            var installs = CreateInstallDatas(type, injects);
+            var injects = CreateInjectDataCollection(type);
+            var installs = CreateInstallDataCollection(type);
 
-            return new ReflectionData()
+            // Special case, for external installs
+            if (installs == null && injects == null)
+            {   
+                installs = new List<InstallData> { new() { type = type } };
+            }
+
+            return new ReflectionData
             {
-                Installs = installs,
-                Injects = injects
+                installs = installs,
+                injects = injects
             };
         }
 
-        private static List<InstallData> CreateInstallDatas(Type type, List<InjectData> injects)
+        private static List<InstallData> CreateInstallDataCollection(Type type)
         {
             var result = new List<InstallData>();
 
+            CreateInstallDataCollection(type, result);
+
+            return result.Any() ? result : null;
+        }
+
+        private static void CreateInstallDataCollection(Type type, List<InstallData> result)
+        {
             foreach (var attribute in type.GetCustomAttributes<Install>())
             {
                 var data = new InstallData
                 {
-                    Type = attribute.Type ?? type
+                    type = attribute.type ?? type
                 };
+
                 result.Add(data);
             }
-            
-            if (result.Count > 0)
+
+            foreach (var item in type.GetInterfaces())
             {
-                return result;
+                CreateInstallDataCollection(item, result);
             }
 
-            if (injects == null)
+            if (type.BaseType != null)
             {
-                var data = new InstallData
-                {
-                    Type = type
-                };
-                result.Add(data);
+                CreateInstallDataCollection(type.BaseType, result);
             }
-            return result;
-        }
-        
-        private static List<InjectData> CreateInjectData(Type type)
-        {
-            const BindingFlags fieldBindings = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-
-            var fields = type.GetAllFields(fieldBindings);
-
-            var result = fields
-                .Select(field => CreateInjectData(type, field))
-                .Where(inject => inject != null)
-                .ToList();
-
-            return result.Count > 0 
-                ? result 
-                : null;
         }
 
-        private static InjectData CreateInjectData(Type type, FieldInfo field)
+        private static List<InjectData> CreateInjectDataCollection(Type type)
         {
-            const BindingFlags methodBindings = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            var fields = type.GetAllFields(BINDINGS);
+            var result = fields.Select(CreateInjectData).Where(inject => inject != null).ToList();
+            var methods = type.GetAllMethods(BINDINGS);
+            result.AddRange(methods.Select(CreateInjectData).Where(inject => inject != null));
 
-            if (!field.TryGetCustomAttribute<Inject>(out var injectAttribute)) 
+            return result.Any() ? result : null;
+        }
+
+        private static InjectData CreateInjectData(FieldInfo field)
+        {
+            if (!field.TryGetCustomAttribute<Inject>(out var attribute)) 
                 return null;
             
-            var injectType = injectAttribute.Type ?? field.FieldType;
-            var callback = injectAttribute.Callback ?? $"On{injectType.Name}Inject";
-            var method = type.GetMethod(callback, methodBindings);
+            var injectType = attribute.type ?? field.FieldType;
 
             return new InjectData
             {
-                Type = injectType,
-                Field = field,
-                Callback = method,
-                Updater = injectAttribute is Update
+                type = injectType,
+                field = field,
+                tracking = attribute is Track
+            };
+        }
+
+        private static InjectData CreateInjectData(MethodInfo method)
+        {
+            if (!method.TryGetMethodParameterType(out var parameterType) ||
+                !method.TryGetCustomAttribute<Inject>(out var attribute)) 
+                return null;
+            
+            var injectType = attribute.type ?? parameterType;
+
+            return new InjectData
+            {
+                type = injectType,
+                method = method,
+                tracking = attribute is Track
             };
         }
 
@@ -396,7 +419,7 @@ namespace Commons
         {
             _dependencyLists = new Dictionary<Type, DependencyList>();
             _injectorLists = new Dictionary<Type, ListenerList>();
-            _updaterLists = new Dictionary<Type, ListenerList>();
+            _trackingLists = new Dictionary<Type, ListenerList>();
             _reflections = new Dictionary<Type, ReflectionData>();
         }
 
@@ -406,40 +429,16 @@ namespace Commons
         {
             Clear();
 
-            EditorApplication.playModeStateChanged += onPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
             return;
 
-            void onPlayModeStateChanged(PlayModeStateChange change)
+            void OnPlayModeStateChanged(PlayModeStateChange change)
             {
                 if (change == PlayModeStateChange.ExitingPlayMode)
+                {
                     Clear();
+                }
             }
-        }
-#endif
-
-#if ENABLE_DI_LOGS
-        private const string TARGET_COLOR = "FF8000";
-        private const string FIELD_COLOR = "00FFFF";
-        private const string VALUE_COLOR = "FFFFFF";
-
-        private static void DebugLog(string message, object target, object field, object value)
-        {
-            UnityEngine.Debug.Log($"[{nameof(DI_Binder)}] {message} <color=#{FIELD_COLOR}>[{field}]</color> of <color=#{TARGET_COLOR}>[{target}]</color> with value <color=#{VALUE_COLOR}>[{value}]</color>");
-        }
-
-        private static void DebugLog(string message, object target, object field)
-        {
-            UnityEngine.Debug.Log($"[{nameof(DI_Binder)}] {message} <color=#{FIELD_COLOR}>[{field}]</color> of <color=#{TARGET_COLOR}>[{target}]</color>");
-        }
-
-        private static void DebugLog(string message, object target)
-        {
-            UnityEngine.Debug.Log($"[{nameof(DI_Binder)}] {message} <color=#{TARGET_COLOR}>[{target}]</color>");
-        }
-
-        private static void DebugWarning(string message, object target)
-        {
-            UnityEngine.Debug.LogWarning($"[{nameof(DI_Binder)}] {message} <color=#{TARGET_COLOR}>[{target}]</color>");
         }
 #endif
     }

@@ -68,11 +68,11 @@ namespace Commons
 
         private static Dictionary<Type, DependencyList> _dependencyLists = new();
         private static Dictionary<Type, ListenerList> _injectorLists = new();
-        private static Dictionary<Type, ListenerList> _trackingLists = new();
+        private static Dictionary<Type, ListenerList> _trackerLists = new();
         private static Dictionary<Type, ReflectionData> _reflections = new();
-
+        
         /// <summary>
-        /// Binds <paramref name="target"/> by handling Injects and Installs, defined by assigned attributes.
+        /// Binds <paramref name="target"/> by handling <see cref="Inject"/>s and <see cref="Install"/>s, defined by assigned attributes.
         /// </summary>
         public static void Bind(object target)
         {
@@ -222,18 +222,17 @@ namespace Commons
 
         private static bool RemoveDependency(Type type, object dependency)
         {
-            if (TryGetDependencies(type, out var dependencies))
+            if (!TryGetDependencies(type, out var dependencies))
+                return false;
+            
+            var changed = dependencies.Remove(dependency);
+
+            if (dependencies.IsEmpty())
             {
-                var changed = dependencies.Remove(dependency);
-
-                if (dependencies.Count == 0)
-                {
-                    RemoveDependencies(type);
-                }
-
-                return changed;
+                RemoveDependencies(type);
             }
-            return false;
+
+            return changed;
         }
 
         private static bool TryGetDependencies(Type type, out DependencyList dependencies) 
@@ -258,29 +257,29 @@ namespace Commons
 
         private static void RemoveTracker(Type type, object updater)
         {
-            if (TryGetUpdaters(type, out var updaters))
+            if (!TryGetUpdaters(type, out var updaters))
+                return;
+            
+            updaters.Remove(updater);
+            if (updaters.IsEmpty())
             {
-                updaters.Remove(updater);
-                if (updaters.Count == 0)
-                {
-                    RemoveTrackers(type);
-                }
+                RemoveTrackers(type);
             }
         }
 
         private static bool TryGetUpdaters(Type type, out ListenerList updaters) 
-            => _trackingLists.TryGetValue(type, out updaters);
+            => _trackerLists.TryGetValue(type, out updaters);
 
         private static ListenerList EnsureUpdaters(Type type)
         {
-            if (!_trackingLists.TryGetValue(type, out var updaters))
-                _trackingLists[type] = updaters = new ListenerList();
+            if (!_trackerLists.TryGetValue(type, out var updaters))
+                _trackerLists[type] = updaters = new ListenerList();
             
             return updaters;
         }
 
         private static void RemoveTrackers(Type type) 
-            => _trackingLists.Remove(type);
+            => _trackerLists.Remove(type);
 
         #endregion
 
@@ -290,13 +289,13 @@ namespace Commons
 
         private static void RemoveInjector(Type type, object injector)
         {
-            if (TryGetInjectors(type, out var injectors))
+            if (!TryGetInjectors(type, out var injectors))
+                return;
+
+            injectors.Remove(injector);
+            if (injectors.IsEmpty())
             {
-                injectors.Remove(injector);
-                if (injectors.Count == 0)
-                {
-                    RemoveInjectors(type);
-                }
+                RemoveInjectors(type);
             }
         }
 
@@ -419,7 +418,7 @@ namespace Commons
         {
             _dependencyLists = new Dictionary<Type, DependencyList>();
             _injectorLists = new Dictionary<Type, ListenerList>();
-            _trackingLists = new Dictionary<Type, ListenerList>();
+            _trackerLists = new Dictionary<Type, ListenerList>();
             _reflections = new Dictionary<Type, ReflectionData>();
         }
 

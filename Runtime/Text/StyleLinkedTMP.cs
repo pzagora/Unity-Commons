@@ -12,13 +12,15 @@ namespace Commons
     public class StyleLinkedTMP : TextMeshProUGUI
     {
         [SerializeField] private FontPreset fontSetting;
-        
-        public FontPreset FontSetting 
+
+        public FontPreset FontSetting
             => fontSetting;
 
         protected override void Awake()
         {
             base.Awake();
+
+            ApplyPreset();
             Binder.Bind(this);
         }
 
@@ -31,31 +33,41 @@ namespace Commons
         protected override void OnEnable()
         {
             base.OnEnable();
-            ApplyFontIfNeeded();
+            ApplyPreset();
         }
 
         protected override void OnValidate()
         {
             base.OnValidate();
-            ApplyFontIfNeeded();
+            ApplyPreset();
         }
 
         public void ApplyFont()
         {
-            if (fontSetting != null && fontSetting.fontAsset != null)
-            {
-                font = fontSetting.fontAsset;
-            }
+            if (fontSetting == null || fontSetting.fontAsset == null)
+                return;
+
+            if (font == fontSetting.fontAsset)
+                return;
+           
+            font = fontSetting.fontAsset;
+            SetAllDirty();
         }
 
-        private void ApplyFontIfNeeded()
+        private void ApplyPreset()
         {
+            if (fontSetting == null || fontSetting.fontAsset == null)
+                return;
+
 #if UNITY_EDITOR
-            if (!EditorApplication.isPlaying && fontSetting != null && font != fontSetting.fontAsset)
+            if (!EditorApplication.isPlaying)
             {
                 ApplyFont();
+                return;
             }
 #endif
+
+            ApplyFont();
         }
     }
 }

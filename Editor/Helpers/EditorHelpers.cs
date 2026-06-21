@@ -67,6 +67,7 @@ namespace Commons.Editor
         }
 
         public static void HorizontalLine() => HorizontalLine(Color.gray);
+
         public static void HorizontalLine(Color color, int height = 1)
         {
             var c = GUI.color;
@@ -81,10 +82,15 @@ namespace Commons.Editor
                 margin = new RectOffset(NumericExtensions.Zero, NumericExtensions.Zero, 4, 4),
                 fixedHeight = height
             };
-            
+
             GUILayout.Box(GUIContent.none, horizontalLine);
 
             GUI.color = c;
+        }
+
+        public static void HorizontalLine(Rect rect, Color color)
+        {
+            EditorGUI.DrawRect(rect, color);
         }
         
         public static bool MatchIgnoreCase(this FieldInfo field, string fieldName, bool condition = true)

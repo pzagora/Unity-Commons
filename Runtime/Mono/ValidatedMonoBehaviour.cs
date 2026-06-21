@@ -26,7 +26,7 @@ namespace Commons
                 return true;
             
             missingReferenceExceptions = (from fieldInfo in fieldInfos
-                let requiredAttribute = fieldInfo.GetCustomAttributes(typeof(Required), false).FirstOrDefault()
+                let requiredAttribute = fieldInfo.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault()
                 let serializeFieldAttribute = fieldInfo.GetCustomAttributes(typeof(SerializeField), false).FirstOrDefault()
                 where requiredAttribute != null
                 where fieldInfo.IsPublic || serializeFieldAttribute != null

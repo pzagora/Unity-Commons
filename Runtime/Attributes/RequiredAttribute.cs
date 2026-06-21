@@ -7,7 +7,7 @@ namespace Commons
     /// Check happens at Start() call, so it is possible to fill variable in Awake() method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class Required : Attribute
+    public class RequiredAttribute : Attribute
     {
     }
 }

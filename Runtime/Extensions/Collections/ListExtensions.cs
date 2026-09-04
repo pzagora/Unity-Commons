@@ -146,12 +146,26 @@ namespace Commons
 
         public static bool TryFind<T>(this List<T> self, Predicate<T> match, out T value)
         {
-            return !Equals(value = self.Find(match), default);
+            var index = self.FindIndex(match);
+            if (index < 0)
+            {
+                value = default;
+                return false;
+            }
+            value = self[index];
+            return true;
         }
 
         public static bool TryFindLast<T>(this List<T> self, Predicate<T> match, out T value)
         {
-            return !Equals(value = self.FindLast(match), default);
+            var index = self.FindLastIndex(match);
+            if (index < 0)
+            {
+                value = default;
+                return false;
+            }
+            value = self[index];
+            return true;
         }
 
         public static bool TryFindAll<T>(this List<T> self, Predicate<T> match, out List<T> value)

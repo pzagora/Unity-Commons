@@ -1,8 +1,7 @@
 {
-    "name": "Commons.EditModeTests",
+    "name": "Commons.Tests",
     "rootNamespace": "",
     "references": [
-        "Unity.Commons",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Commons"

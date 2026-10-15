@@ -2,6 +2,11 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [1.2.0]
+
+### Added
+- `PoolSettings` — a ScriptableObject holding `GenericObjectPool` sizing (time-to-live, initial size, max size) so several pools can share one configuration asset instead of repeating the numbers inline.
+
 ## [1.1.0]
 
 ### Added

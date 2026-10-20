@@ -21,12 +21,10 @@ namespace Commons
             base.Awake();
 
             ApplyPreset();
-            Binder.Bind(this);
         }
 
         protected override void OnDestroy()
         {
-            Binder.Unbind(this);
             base.OnDestroy();
         }
 

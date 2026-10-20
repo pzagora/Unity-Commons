@@ -2,6 +2,15 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [2.0.0]
+
+### Changed
+- **BREAKING:** Dependency injection, pooling, services and logging were extracted into separate packages, so Commons no longer bundles them. Dependency injection moved to the standalone [Unity Dependency Injection](https://github.com/pzagora/Unity-DependencyInjection) package (Commons no longer references it); `GenericObjectPool`/`PoolSettings` to [Commons.Pooling](https://github.com/pzagora/Unity-Commons.Pooling); `CoroutineService` to [Commons.Services](https://github.com/pzagora/Unity-Commons.Services); the `Report` logging façade to [Unity Reporter](https://github.com/pzagora/Unity-Reporter). Pooling and Services compile back into the `Commons` assembly via `.asmref`, so their types stay in namespace `Commons`.
+
+### Removed
+- **BREAKING:** `DependentMonoBehaviour` — binding is now handled automatically by the Dependency Injection weaver. Derive from `ValidatedMonoBehaviour` (or `MonoBehaviour`) and mark fields `[Inject]`.
+- **BREAKING:** `IDestroyable` — unified on `System.IDisposable`. Types that implemented `IDestroyable.Destroy()` now implement `IDisposable.Dispose()`.
+
 ## [1.2.0]
 
 ### Added

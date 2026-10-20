@@ -21,7 +21,7 @@ Requires Unity `6000.0+`. The runtime code (assembly `Commons`) ships in player 
 | **Mono** | `ValidatedMonoBehaviour` base class with inspector validation of `[Required]` fields. |
 | **Helpers** | `Safe` (condition-guarded call / get / set) and `Wait.UntilApproximately` (await a float value approaching a target). |
 | **Math** | `Hash.Compute(...)` for order-sensitive composite hash codes. |
-| **Interfaces** | Small contracts — `IDestroyable`, `IService`, `IModule`, `IIndexed` (+ `Indexed`). |
+| **Interfaces** | Small contracts — `IService`, `IModule`, `IIndexed` (+ `Indexed`). |
 | **Attributes** | `[Required]`, `[StrongHeader]`, `[LocalizedKey]` inspector/metadata attributes. |
 | **PlayerPrefs** | `ATargetedPlayerPrefs` base for namespaced, typed preference access. |
 
@@ -67,7 +67,7 @@ Runtime/
   Extensions/    Extension methods (Collections/ + component/value-type helpers)
   Fonts/         FontPreset
   Helpers/       Safe, Wait
-  Interfaces/    IDestroyable, IService, IModule, IIndexed
+  Interfaces/    IService, IModule, IIndexed
   Math/          Hash
   Mono/          ValidatedMonoBehaviour base class
   PlayerPrefs/   Targeted PlayerPrefs base

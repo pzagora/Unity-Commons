@@ -12,7 +12,7 @@ Install from the zagora.dev UPM registry — add the scoped registry (and OpenUP
     { "name": "OpenUPM", "url": "https://package.openupm.com", "scopes": [ "com.cysharp" ] }
 ],
 "dependencies": {
-  "com.zagoradev.unity.commons": "2.1.3"
+  "com.zagoradev.unity.commons": "2.1.4"
 }
 ```
 

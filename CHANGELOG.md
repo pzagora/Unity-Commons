@@ -2,6 +2,11 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [2.1.4]
+
+### Changed
+- First version published to the zagora.dev UPM registry (2.1.3 was tagged but never published). The publish workflow takes its target from the `UPM_PUBLISH_REGISTRY` repo variable, so CI publishes through the Worker's workers.dev address, which zagora.dev's Bot Fight Mode doesn't challenge.
+
 ## [2.1.3]
 
 ### Changed

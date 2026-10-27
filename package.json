@@ -1,9 +1,12 @@
 {
   "name": "com.zagoradev.unity.commons",
   "displayName": "Unity Commons (zagora.dev)",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "unity": "6000.0",
   "description": "Various scripts to help with Unity development.",
+  "documentationUrl": "https://github.com/pzagora/Unity-Commons/blob/main/README.md",
+  "changelogUrl": "https://github.com/pzagora/Unity-Commons/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/pzagora/Unity-Commons/blob/main/LICENSE.md",
   "author": {
     "name": "Piotr Zagóra",
     "email": "piotr@zagora.dev",

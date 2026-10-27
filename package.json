@@ -1,7 +1,7 @@
 {
   "name": "com.zagoradev.unity.commons",
   "displayName": "Unity Commons (zagora.dev)",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "unity": "6000.0",
   "description": "Various scripts to help with Unity development.",
   "documentationUrl": "https://github.com/pzagora/Unity-Commons/blob/main/README.md",
@@ -18,5 +18,9 @@
     "commons",
     "ui",
     "zagora.dev"
-  ]
+  ],
+  "dependencies": {
+    "com.cysharp.unitask": "2.5.11",
+    "com.unity.ugui": "2.0.0"
+  }
 }

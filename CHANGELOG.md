@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [2.1.3]
+
+### Changed
+- Dependencies are declared as versions instead of git URLs, so they resolve from the zagora.dev UPM registry (`https://upm.zagora.dev`) and install automatically; UniTask comes from OpenUPM.
+- Declared dependencies the assemblies already relied on: `com.cysharp.unitask`, `com.unity.ugui`.
+- Installation instructions use the registry.
+
 ## [2.1.2]
 
 ### Added

@@ -4,10 +4,16 @@ A foundation library of general-purpose utilities for Unity 6 — extension meth
 
 ## Installation
 
-Add to `Packages/manifest.json`:
+Install from the zagora.dev UPM registry — add the scoped registry (and OpenUPM, for UniTask) to `Packages/manifest.json`, then the package; its dependencies install automatically:
 
 ```json
-"com.zagoradev.unity.commons": "https://github.com/pzagora/Unity-Commons.git"
+"scopedRegistries": [
+    { "name": "zagora.dev", "url": "https://upm.zagora.dev", "scopes": [ "com.zagoradev" ] },
+    { "name": "OpenUPM", "url": "https://package.openupm.com", "scopes": [ "com.cysharp" ] }
+],
+"dependencies": {
+  "com.zagoradev.unity.commons": "2.1.3"
+}
 ```
 
 Requires Unity `6000.0+`. The runtime code (assembly `Commons`) ships in player builds; editor helpers live in the `Editor/` folder.

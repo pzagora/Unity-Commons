@@ -32,9 +32,15 @@ Some areas that previously shipped inside Commons now live in their own reposito
 | Package | Contents | Relationship to Commons |
 | --- | --- | --- |
 | [Commons.Pooling](https://github.com/pzagora/Unity-Commons.Pooling) | `GenericObjectPool<T>`, `PoolSettings`. | Compiles **into** the `Commons` assembly via `.asmref`; requires Commons. |
-| [Commons.Services](https://github.com/pzagora/Unity-Commons.Services) | `CoroutineService` (+ `ICoroutineService`). | Compiles **into** the `Commons` assembly via `.asmref`; requires Commons. |
+| [Commons.Services](https://github.com/pzagora/Unity-Commons.Services) | `CoroutineService` (+ `ICoroutineService`), `SceneService<TScene>`. | Compiles **into** the `Commons` assembly via `.asmref`; requires Commons. |
+| [Commons.AsyncPipeline](https://github.com/pzagora/Unity-Commons.AsyncPipeline) | `AsyncPipeline<TStepId>` — weighted, cancellable async step sequences. | Compiles **into** the `Commons` assembly via `.asmref`; requires Commons. |
+| [Commons.Addressables](https://github.com/pzagora/Unity-Commons.Addressables) | `AssetScope`, folder-convention tooling, key generation, build validation, scopes debugger. | Own assembly (`Commons.Addressables`); requires Commons and Addressables. |
 
 Dependency injection and logging were also extracted, but as fully independent packages that Commons does **not** depend on: [Unity Dependency Injection](https://github.com/pzagora/Unity-DependencyInjection) and [Unity Reporter](https://github.com/pzagora/Unity-Reporter).
+
+### Logging
+
+Commons packages log through the internal `CommonsLog` (`Event` / `Warning` / `Error` / `Exception`, each taking a source name). When Unity Reporter is installed, the `Commons` assembly's version defines set `PACKAGE_REPORTER` and calls go straight to `Report` with that source; otherwise they compile to `Debug.Log*` as `[Source] message`. Version defines only see packages installed through the Package Manager; a project that embeds these packages under `Assets/` adds `PACKAGE_REPORTER` to its Scripting Define Symbols instead.
 
 ## Examples
 

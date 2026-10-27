@@ -44,7 +44,7 @@ namespace Commons
             if (HasAllRequiredReferences(out var missingReferenceExceptions))
                 return;
             
-            missingReferenceExceptions.ForEach(mre => Debug.LogError(mre, this));
+            missingReferenceExceptions.ForEach(mre => CommonsLog.Error(GetType().Name, mre, this));
         }
 #endif
     }

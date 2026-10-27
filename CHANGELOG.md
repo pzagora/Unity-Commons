@@ -2,6 +2,14 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [2.1.0]
+
+### Added
+- `CommonsLog` — internal logging for the Commons packages (exposed only to Commons-family assemblies via `InternalsVisibleTo`). Calls [Unity Reporter](https://github.com/pzagora/Unity-Reporter) (`Report.Event/Warning/Error/Exception` with the package as source) when `PACKAGE_REPORTER` is defined — set automatically by a version define on `com.zagoradev.unity.reporter` — and `Debug.Log*` otherwise, so Reporter stays optional.
+
+### Changed
+- `ValidatedMonoBehaviour` reports missing references through `CommonsLog`.
+
 ## [2.0.1]
 
 ### Added

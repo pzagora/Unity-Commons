@@ -10,9 +10,17 @@
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "precompiledReferences": [],
+    "precompiledReferences": [
+        "UnityReporter.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.zagoradev.unity.reporter",
+            "expression": "",
+            "define": "PACKAGE_REPORTER"
+        }
+    ],
     "noEngineReferences": false
 }

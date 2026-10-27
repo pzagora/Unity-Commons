@@ -265,13 +265,13 @@ namespace Commons.Editor
         {
             if (_targetFont == null)
             {
-                Debug.LogError("Target Font must be assigned!");
+                CommonsLog.Error(nameof(TextBakerCJK), "Target Font must be assigned!");
                 return;
             }
 
             if (string.IsNullOrEmpty(_outputFolderPath) || string.IsNullOrEmpty(_outputFileName))
             {
-                Debug.LogError("Output folder path and file name must be specified!");
+                CommonsLog.Error(nameof(TextBakerCJK), "Output folder path and file name must be specified!");
                 return;
             }
 
@@ -388,7 +388,7 @@ namespace Commons.Editor
             string assetPath = Path.Combine(_outputFolderPath, _outputFileName);
             if (!assetPath.StartsWith("Assets"))
             {
-                Debug.LogError("Output path must be inside the Assets folder.");
+                CommonsLog.Error(nameof(TextBakerCJK), "Output path must be inside the Assets folder.");
                 return;
             }
 
@@ -412,14 +412,14 @@ namespace Commons.Editor
             // Call HasCharacters with tryAddCharacter = true to populate as many chars as possible.
             bool success = tmpFontAsset.HasCharacters(UnicodeUintArrayToString(unicodeArray), out uint[] missingCharacters, false, true);
 
-            Debug.Log($"Font atlas generation completed! Saved at {assetPath}");
+            CommonsLog.Event(nameof(TextBakerCJK), $"Font atlas generation completed! Saved at {assetPath}");
 
             if (!success && missingCharacters != null && missingCharacters.Length > 0 && _outputMissingCharactersAsTxtFile)
             {
                 string missingCharactersFilePath = Path.Combine(_outputFolderPath, $"{_outputFileName}_MissingCharacters.txt");
                 var missingCharactersString = UnicodeUintArrayToString(missingCharacters);
                 File.WriteAllText(missingCharactersFilePath, missingCharactersString);
-                Debug.Log($"Missing characters saved at {missingCharactersFilePath}");
+                CommonsLog.Event(nameof(TextBakerCJK), $"Missing characters saved at {missingCharactersFilePath}");
                 AssetDatabase.Refresh();
             }
         }
@@ -457,7 +457,7 @@ namespace Commons.Editor
             TextAsset txt = Resources.Load<TextAsset>(fileName);
             if (txt == null)
             {
-                Debug.LogError($"{fileName}.txt not found in Resources!");
+                CommonsLog.Error(nameof(TextBakerCJK), $"{fileName}.txt not found in Resources!");
                 return string.Empty;
             }
 

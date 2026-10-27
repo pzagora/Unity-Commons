@@ -2,6 +2,11 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [2.1.1]
+
+### Changed
+- `TextBakerCJK` logs through `CommonsLog` (Reporter when installed) instead of `Debug.Log*`.
+
 ## [2.1.0]
 
 ### Added

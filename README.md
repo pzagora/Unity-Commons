@@ -16,7 +16,7 @@ Install from the zagora.dev UPM registry — add the scoped registry (and OpenUP
 }
 ```
 
-Requires Unity `6000.0+`. The runtime code (assembly `Commons`) ships in player builds; editor helpers live in the `Editor/` folder.
+Requires Unity `6000.0+`. The runtime code (assembly `Commons`) ships in player builds; the editor helpers and inspectors are the Editor-only assembly `Commons.Editor` (`Editor/`). Reference `Commons.Editor` from your own Editor assemblies to use them (e.g. `EditorHelper`).
 
 ## What's inside
 
@@ -80,12 +80,13 @@ Runtime/
   Fonts/         FontPreset
   Helpers/       Safe, Wait
   Interfaces/    IService, IModule, IIndexed
+  Materials/     AssetBundleMaterialsRefresher (Editor preview of asset bundle materials)
   Math/          Hash
   Mono/          ValidatedMonoBehaviour base class
   PlayerPrefs/   Targeted PlayerPrefs base
   Text/          StyleLinkedTMP
   UI/            SafeArea, RectEdge
-Editor/          Editor-only drawers and helpers
+Editor/          Commons.Editor assembly: Editor-only drawers, inspectors and helpers
 Tests/           EditMode tests
 ```
 

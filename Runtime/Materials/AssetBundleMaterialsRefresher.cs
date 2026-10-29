@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Commons.Editor
+namespace Commons
 {
     /// <summary>
     /// Class for editor asset bundle materials fix.

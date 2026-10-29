@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 #if UNITY_EDITOR
-using Commons.Editor;
+using UnityEditor;
 #endif
 
 namespace Commons
@@ -15,7 +15,7 @@ namespace Commons
         public StrongHeaderAttribute(string text, bool lineSeparator = true, bool nicify = true)
         {
 #if UNITY_EDITOR
-            Text = nicify ? text.GetInspectorDisplayName() : text;
+            Text = nicify ? ObjectNames.NicifyVariableName(text) : text;
 #else
             Text = text;
 #endif

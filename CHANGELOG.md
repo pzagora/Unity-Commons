@@ -2,6 +2,17 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [3.0.0]
+
+### Changed
+- **BREAKING:** The Editor code (`EditorHelper`, the inspector editors and drawers, `TextBakerCJK`) is now its own
+  Editor-only assembly, `Commons.Editor`, instead of compiling into `Commons` behind `#if UNITY_EDITOR`. Editor code
+  can no longer reach player builds. Assemblies that use these types (e.g. `Commons.Editor.EditorHelper`) must add a
+  reference to `Commons.Editor`; the namespaces are unchanged.
+- **BREAKING:** `AssetBundleMaterialsRefresher` moved from `Commons.Editor` to the `Commons` namespace in the runtime
+  assembly, since runtime code calls it (it does nothing outside the Editor).
+- `StrongHeaderAttribute` nicifies its text with `ObjectNames.NicifyVariableName` directly (same result).
+
 ## [2.1.7]
 
 ### Fixed

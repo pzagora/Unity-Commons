@@ -34,11 +34,13 @@ namespace Commons
             ApplyPreset();
         }
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
             ApplyPreset();
         }
+#endif
 
         public void ApplyFont()
         {

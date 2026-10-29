@@ -1,6 +1,8 @@
 using System;
-using Commons.Editor;
 using UnityEngine;
+#if UNITY_EDITOR
+using Commons.Editor;
+#endif
 
 namespace Commons
 {
@@ -12,7 +14,11 @@ namespace Commons
 
         public StrongHeaderAttribute(string text, bool lineSeparator = true, bool nicify = true)
         {
+#if UNITY_EDITOR
             Text = nicify ? text.GetInspectorDisplayName() : text;
+#else
+            Text = text;
+#endif
             LineSeparator = lineSeparator;
         }
     }

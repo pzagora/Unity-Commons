@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [2.1.7]
+
+### Fixed
+- Player builds failed to compile: `StyleLinkedTMP.OnValidate` overrides a method TextMeshPro only declares in the
+  Editor, and `TextBakerCJK` (an `EditorWindow`) was compiled into players. Both are now Editor-only, and
+  `StrongHeaderAttribute` no longer calls the Editor-only `GetInspectorDisplayName` in players.
+
 ## [2.1.6]
 
 ### Changed

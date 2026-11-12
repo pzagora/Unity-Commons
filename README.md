@@ -12,7 +12,7 @@ Install from the zagora.dev UPM registry — add the scoped registry (and OpenUP
     { "name": "OpenUPM", "url": "https://package.openupm.com", "scopes": [ "com.cysharp" ] }
 ],
 "dependencies": {
-  "com.zagoradev.unity.commons": "2.1.6"
+  "com.zagoradev.unity.commons": "3.1.0"
 }
 ```
 
@@ -30,6 +30,19 @@ Requires Unity `6000.0+`. The runtime code (assembly `Commons`) ships in player 
 | **Interfaces** | Small contracts — `IService`, `IModule`, `IIndexed` (+ `Indexed`). |
 | **Attributes** | `[Required]`, `[StrongHeader]`, `[LocalizedKey]` inspector/metadata attributes. |
 | **PlayerPrefs** | `ATargetedPlayerPrefs` base for namespaced, typed preference access. |
+| **Text** | `StyleLinkedTMP`, reusable `FontPreset` assets, and optional `NumericTextPreset` formatting for numbers, percentages and fractions. |
+
+### Styled and numeric TMP text
+
+`StyleLinkedTMP` remains a general-purpose styled TextMeshPro component. Assigning a `NumericTextPreset` is optional:
+ordinary string and localized bindings ignore it. Numeric MVVM bindings use it to format a value or range with shared
+mode, precision, prefix and suffix settings. Create presets from **Assets ▸ Create ▸ Scriptable Objects ▸ Text ▸ Numeric
+Text Preset**.
+
+Use **Convert to StyleLinkedTMP** from the dedicated **Style-Linked Text** inspector panel or the component context menu
+to preserve its complete TMP serialized state while changing the component type. This tool belongs to Commons and does
+not require MVVM Localization. Optional Editor packages can add their own distinct panels underneath through
+`TMPInspectorToolRegistry`.
 
 ## Companion packages
 
@@ -84,7 +97,7 @@ Runtime/
   Math/          Hash
   Mono/          ValidatedMonoBehaviour base class
   PlayerPrefs/   Targeted PlayerPrefs base
-  Text/          StyleLinkedTMP
+  Text/          StyleLinkedTMP, NumericTextPreset
   UI/            SafeArea, RectEdge
 Editor/          Commons.Editor assembly: Editor-only drawers, inspectors and helpers
 Tests/           EditMode tests

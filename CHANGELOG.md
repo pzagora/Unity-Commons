@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this package adheres to Semantic Versioning.
 
+## [3.1.0]
+
+### Added
+- Optional `NumericTextPreset` assets for reusable number, percentage and fraction formatting on `StyleLinkedTMP`, including precision and prefix/suffix settings.
+- Lossless plain `TextMeshProUGUI` to `StyleLinkedTMP` conversion from a dedicated inspector panel or the component context menu; Localization is not required.
+- `TMPInspectorToolRegistry`, allowing optional Editor packages to add their own separate panels beneath Commons' Style-Linked tools without replacing the TMP inspector.
+
 ## [3.0.0]
 
 ### Changed

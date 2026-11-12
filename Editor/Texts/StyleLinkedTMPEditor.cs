@@ -12,11 +12,16 @@ namespace Commons.Editor
         private UnityEditor.Editor _internalTMPInspector;
         private StyleLinkedTMP _styleLinked;
         private SerializedProperty _fontSettingProp;
+        private SerializedProperty _numericTextPresetProp;
+
+        protected virtual bool ShowNumericFormatting
+            => true;
 
         private void OnEnable()
         {
             _styleLinked = (StyleLinkedTMP)target;
             _fontSettingProp = serializedObject.FindProperty("fontSetting");
+            _numericTextPresetProp = serializedObject.FindProperty("numericTextPreset");
 
             var tmpEditorType = Type.GetType("TMPro.EditorUtilities.TMP_EditorPanelUI, Unity.TextMeshPro.Editor");
             if (tmpEditorType != null)
@@ -31,6 +36,9 @@ namespace Commons.Editor
 
             DrawFontSettingUI();
 
+            if (ShowNumericFormatting)
+                DrawNumericTextPresetUI();
+
             serializedObject.ApplyModifiedProperties();
 
             if (_internalTMPInspector != null)
@@ -42,6 +50,24 @@ namespace Commons.Editor
                 EditorGUILayout.HelpBox("TMP Editor not found. Falling back to default inspector.", MessageType.Warning);
                 DrawDefaultInspector();
             }
+        }
+
+        private void DrawNumericTextPresetUI()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Numeric Formatting", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_numericTextPresetProp, GUIContent.none);
+
+            if (_numericTextPresetProp.objectReferenceValue == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "Optional. Normal and localized string bindings ignore numeric formatting.",
+                    MessageType.Info
+                );
+            }
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space();
         }
 
         private void DrawFontSettingUI()

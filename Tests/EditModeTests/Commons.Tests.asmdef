@@ -4,7 +4,9 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Commons"
+        "Commons",
+        "Commons.Editor",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"

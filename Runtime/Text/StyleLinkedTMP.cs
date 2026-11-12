@@ -12,9 +12,27 @@ namespace Commons
     public class StyleLinkedTMP : TextMeshProUGUI
     {
         [SerializeField] private FontPreset fontSetting;
+        [SerializeField] private NumericTextPreset numericTextPreset;
 
         public FontPreset FontSetting
             => fontSetting;
+
+        public NumericTextPreset NumericTextPreset
+            => numericTextPreset;
+
+        public void SetNumericValue(float value)
+        {
+            text = numericTextPreset != null
+                ? numericTextPreset.Format(value)
+                : value.ToString();
+        }
+
+        public void SetNumericRange(float value, float maximum)
+        {
+            text = numericTextPreset != null
+                ? numericTextPreset.Format(value, maximum)
+                : value.ToString();
+        }
 
         protected override void Awake()
         {
